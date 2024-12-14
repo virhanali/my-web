@@ -20,6 +20,6 @@ jobs:
             git pull origin main
             npm install
             npm run build
-            pm2 stop virhanali-app || true
+            pm2 delete virhanali-app || true
             pm2 start npm --name "virhanali-app" -- start
           '
