@@ -1,0 +1,42 @@
+name: Deploy Web to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout kode dari repo
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Install dependencies dan build di server GitHub Actions
+      - name: Install and Build
+        run: |
+          npm install
+          npm run build
+
+      # 3. Kirim hasil build ke VPS via SCP
+      - name: Deploy to VPS
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: build/
+          target: /var/www/my-vite-app/
+
+      # 4. Restart aplikasi di VPS
+      - name: Restart App on VPS
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            pm2 stop all || true
+            pm2 serve /var/www/virhanali-app --name "virhanali-app" --spa
