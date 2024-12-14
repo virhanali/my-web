@@ -21,7 +21,7 @@ export default function AboutPage() {
         <div className="space-y-6 text-gray-600">
           <p>
             I&apos;m a software engineer and designer focused on creating clean, user-friendly experiences.
-            Currently working on exciting projects that combine creativity with technology.
+            Currently working on exciting projects that combine creativity with technology at eFishery.
           </p>
           
           <p>
