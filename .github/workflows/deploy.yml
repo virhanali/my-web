@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Install dependencies dan build di server GitHub Actions
+      # 2. Install dependencies dan build di GitHub Actions
       - name: Install and Build
         run: |
           npm install
@@ -27,10 +27,10 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source: build/
-          target: /var/www/my-vite-app/
+          source: ./
+          target: /home/virhan/virhanali-app
 
-      # 4. Restart aplikasi di VPS
+      # 4. Jalankan perintah di VPS untuk restart server
       - name: Restart App on VPS
         uses: appleboy/ssh-action@v0.1.3
         with:
@@ -38,5 +38,8 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            pm2 stop all || true
-            pm2 serve /var/www/virhanali-app --name "virhanali-app" --spa
+            cd /home/virhan/virhanali-app
+            npm install
+            npm run build
+            pm2 stop virhanali-app || true
+            pm2 start npm --name "virhanali-app" -- start
